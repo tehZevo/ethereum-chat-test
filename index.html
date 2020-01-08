@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    Contract is deployed on Ropsten at 0x3BcBd63F61eba06627EC9d49017626275441315C <br/>
+    Address: <input type="text" id="address-input" value="0x3BcBd63F61eba06627EC9d49017626275441315C"></input>
+    <button id="connect-button">Connect</button>
+    <br/>
+    Message: <input type="text" id="message-input"></input>
+    <button id="send-button">Send!</button>
+    <script type='text/javascript'>
+    var abi, instance, evt, addr;
+
+    window.addEventListener('load', async () => {
+      // Modern dapp browsers...
+      if (window.ethereum) {
+        window.web3 = new Web3(ethereum);
+        try {
+          // Request account access if needed
+          await ethereum.enable();
+          main();
+        } catch (error) {
+          // User denied account access...
+        }
+      }
+      // Legacy dapp browsers...
+      else if (window.web3) {
+        window.web3 = new Web3(web3.currentProvider);
+        main();
+      }
+      // Non-dapp browsers...
+      else {
+        console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      }
+    });
+
+    //get abi
+    (async () => abi = (await (await fetch("/build/contracts/Chat.json")).json()).abi)();
+
+    $("#send-button").click(async () =>
+    {
+      var text = $("#message-input").val();
+      console.log(text);
+      await new Promise((res, rej) => instance.sendMessage(web3.fromAscii(text), (err, e) => {if(err) {rej(err)} else res(e)}));
+      $("#message-input").val("");
+    })
+
+    $("#connect-button").click(async () =>
+    {
+      addr = $("#address-input").val();
+      //create contract object
+      instance = web3.eth.contract(abi).at(addr);
+      //TODO: stop listening to old contracts?
+      if(evt != null)
+      {
+        evt.stopWatching();
+      }
+
+      evt = instance.Message((err, e) =>
+      {
+        if(err)
+        {
+          throw err;
+        }
+
+        console.log(e.args["sender"] + ": " + web3.toAscii(e.args["data"]));
+      });
+
+      console.log("Connected to " + addr);
+
+      $("#connect-button").prop('disabled', true);
+      $("#connect-button").text("Connected!");
+      $("#address-input").prop('disabled', true);
+    })
+
+    </script>
+  </body>
+</html>
