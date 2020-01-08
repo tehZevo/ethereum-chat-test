@@ -39,7 +39,7 @@
     });
 
     //get abi
-    (async () => abi = (await (await fetch("/build/contracts/Chat.json")).json()).abi)();
+    (async () => abi = (await (await fetch("build/contracts/Chat.json")).json()).abi)();
 
     $("#send-button").click(async () =>
     {
