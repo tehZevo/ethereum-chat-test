@@ -12,6 +12,9 @@
     <br/>
     Message: <input type="text" id="message-input"></input>
     <button id="send-button">Send!</button>
+    <div id="messages">
+
+    </div>
     <script type='text/javascript'>
     var abi, instance, evt, addr;
 
@@ -67,7 +70,10 @@
           throw err;
         }
 
-        console.log(e.args["sender"] + ": " + web3.toAscii(e.args["data"]));
+        var sender = e.args["sender"];
+        var text = web3.toAscii(e.args["data"]);
+        console.log(sender + ": " + text);
+        $("#messages").append(`${sender}: ${text}`);
       });
 
       console.log("Connected to " + addr);
