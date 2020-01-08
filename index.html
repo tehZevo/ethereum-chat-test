@@ -12,8 +12,19 @@
     <br/>
     Message: <input type="text" id="message-input"></input>
     <button id="send-button">Send!</button>
-    <div id="messages">
-
+    <br/><br/>
+    <div id="messages"></div>
+    <br/><br/>
+    <div>
+      Instructions:
+      <ol start=-2>
+        <li>Install <a href="https://metamask.io/" target="_blank">MetaMask</a></li>
+        <li>Switch to the Ropsten test network, then grab some Ethereum from <a href="https://faucet.metamask.io" target="_blank">here</a></li>
+        <li>Enter the contract address in the address field (or use the one already there)</li>
+        <li>Click "Connect"</li>
+        <li>Enter a message in the message field, then hit "Send!"</li>
+        <li>Confirm the transaction in the MetaMask window that pops up</li>
+        <li>Wait for your message to show above</li>
     </div>
     <script type='text/javascript'>
     var abi, instance, evt, addr;
